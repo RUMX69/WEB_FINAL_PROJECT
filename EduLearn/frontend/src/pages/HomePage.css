@@ -1,0 +1,22 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   HomePage.css
+   Styles specific to the Home / Search Results page.
+   Most of the page's layout is handled by shared global styles; this file
+   only defines the search-result count label that appears above the video grid.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Label shown above the video grid when the user has performed a search,
+   e.g. "Showing 12 results for "javascript"".
+   margin-bottom:20px creates breathing room between the label and the grid.
+   var(--text-secondary) is a muted grey – this text is informational, not a
+   primary UI element, so it should not compete visually with the video cards. */
+.search-result-label {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* The search term itself is wrapped in a <strong> tag to make it stand out
+   in a darker, primary-text colour, helping users quickly confirm what they
+   searched for without having to re-read the label. */
+.search-result-label strong { color: var(--text-primary); }

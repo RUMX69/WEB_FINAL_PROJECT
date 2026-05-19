@@ -1,0 +1,233 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   VideoPlayerPage.css
+   Styles for the Video Player page.
+   The page is divided into two columns:
+     LEFT  (1fr)    – the video embed, video metadata, and a Q&A section
+     RIGHT (340px)  – a sticky notes panel for timestamped notes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── PAGE LAYOUT ─────────────────────────────────────────────────────────── */
+
+/* Two-column grid layout with generous padding.
+   1fr for the video content + 340px for the notes sidebar.
+   gap:24px separates the columns.
+   align-items:start prevents the sidebar from stretching to the full
+   height of the video column. */
+.player-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  padding: 24px 28px;
+  align-items: start;
+}
+
+/* Left column: stacks the video embed, metadata card, and Q&A section. */
+.player-left { display: flex; flex-direction: column; gap: 20px; }
+
+
+/* ── VIDEO EMBED ─────────────────────────────────────────────────────────── */
+
+/* Container that enforces a 16:9 aspect ratio for the video.
+   aspect-ratio:16/9 automatically adjusts the height as the width changes,
+   keeping the video correctly proportioned on all screen sizes.
+   overflow:hidden prevents the iframe from peeking outside the box. */
+.player-embed {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #000;   /* black letterbox shown while the video loads */
+}
+
+/* Forces the YouTube iframe player to fill the embed container.
+   !important overrides any inline styles set by the YouTube IFrame API. */
+.yt-player { width: 100% !important; height: 100% !important; }
+
+/* The actual <iframe> element (used as a fallback or for non-API embeds).
+   border:none removes the browser's default iframe border. */
+.player-embed iframe { width: 100%; height: 100%; border: none; }
+
+
+/* ── VIDEO METADATA CARD ─────────────────────────────────────────────────── */
+
+/* Card beneath the video showing the title, description, and save button.
+   padding:18px 20px gives comfortable inner whitespace. */
+.player-meta {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+}
+
+/* Video title at the top of the metadata card. */
+.player-title { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+
+/* Video description / synopsis below the title.
+   line-height:1.6 ensures multi-line descriptions are comfortable to read.
+   margin-bottom:14px creates space before the save button. */
+.player-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.6; }
+
+/* "Save to library" / bookmark toggle button.
+   display:inline-flex + gap:6px lines up the icon and text label.
+   border:1.5px solid keeps it visible without a fill background.
+   transition:all 0.2s smoothly animates the colour and background changes. */
+.save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+/* Hover state and saved state share the same "active" styling:
+   navy border, navy text, and a light accent background fill. */
+.save-btn:hover, .save-btn.saved { border-color: var(--navy); color: var(--navy); background: var(--accent-light); }
+
+
+/* ── Q&A SECTION ─────────────────────────────────────────────────────────── */
+
+/* Wrapper card for the community Q&A area below the metadata. */
+.qa-section { padding: 20px; }
+
+/* Header row: "Q&A" heading + question count badge side by side. */
+.qa-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.qa-header h2 { font-size: 18px; font-weight: 700; }
+
+/* Small pill badge showing the total number of questions (e.g. "12").
+   var(--accent-light) background with var(--accent) text keeps it on-brand. */
+.badge { font-size: 11px; background: var(--accent-light); color: var(--accent); padding: 3px 10px; border-radius: 99px; font-weight: 600; }
+
+/* Scrollable list of Q&A items. */
+.qa-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Individual Q&A item card.
+   Slightly darker background (var(--bg)) than the section card to differentiate. */
+.qa-item { background: var(--bg); border-radius: 8px; padding: 12px 16px; }
+
+/* The question text. */
+.qa-q { font-size: 14px; color: var(--text-primary); margin-bottom: 4px; }
+
+/* The answer text (slightly muted to visually distinguish from the question). */
+.qa-a { font-size: 13px; color: var(--text-secondary); }
+
+/* Indented list of replies/answers to a question.
+   border-left acts as a visual "thread" line linking replies to the question. */
+.qa-answers-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 4px; padding-left: 10px; border-left: 2px solid var(--accent-light); }
+
+/* "Reply" button shown below each question.
+   The accent colour on a light accent background makes it visually grouped
+   with the Q&A area without being too prominent.
+   opacity hover gives a quick, low-cost interaction cue. */
+.qa-reply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.qa-reply-btn:hover { opacity: 0.8; }
+
+/* Form shown inline when the user clicks "Reply".
+   column flex stacks the textarea and action buttons vertically. */
+.qa-answer-form { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+/* Row holding the "Submit" and "Cancel" buttons inside the reply form. */
+.qa-answer-actions { display: flex; align-items: center; gap: 8px; }
+
+/* Overrides for the submit button inside the reply form.
+   width:auto prevents it from stretching to full width like a default form button.
+   Smaller padding and font-size keep it proportionate inside the compact inline form. */
+.qa-submit-answer { width: auto !important; padding: 7px 16px !important; font-size: 13px !important; }
+
+/* Ghost (transparent) secondary button style used for "Cancel" actions.
+   border:1px solid gives it a defined edge without a coloured fill.
+   Hover shows a subtle background tint. */
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-ghost:hover { background: var(--bg-card); }
+
+
+/* ── NOTES PANEL (right sidebar) ─────────────────────────────────────────── */
+
+/* Makes the right sidebar sticky so it stays visible while the user scrolls
+   through the long left column.
+   top calculation accounts for the navbar height plus 16 px buffer. */
+.player-right { position: sticky; top: calc(var(--navbar-height) + 16px); }
+
+/* Inner notes panel container: stacks the header, note input, and list. */
+.notes-panel { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Header row showing the "Notes" heading and note count badge. */
+.notes-header { display: flex; align-items: center; gap: 10px; }
+.notes-header h2 { font-size: 17px; font-weight: 700; }
+
+/* Scrollable list of saved notes.
+   max-height:380px gives the list a fixed maximum height so it doesn't
+   push the page down indefinitely; overflow-y:auto adds a scrollbar when needed. */
+.notes-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+
+/* A single note item row.
+   align-items:flex-start aligns the timestamp, text, and delete button
+   at the top of the row for multi-line notes.
+   border-bottom provides a separator between consecutive notes. */
+.note-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* The clickable timestamp on the left (e.g. "1:23").
+   Accent colour makes it visually distinct and signals it's clickable
+   (clicking jumps the video to that timestamp).
+   flex-shrink:0 prevents it from compressing on narrow panels. */
+.note-ts { color: var(--accent); font-weight: 500; flex-shrink: 0; font-size: 12px; margin-top: 1px; }
+
+/* The note text body takes all remaining horizontal space. */
+.note-text { flex: 1; }
+
+/* Small "×" delete button on the right of each note.
+   background:none removes button styling so it looks like an icon.
+   padding:0 2px gives a small touch target without a visible background. */
+.note-del { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 0 2px; flex-shrink: 0; }
+
+/* Red colour on hover signals the destructive action. */
+.note-del:hover { color: var(--red); }
+
+
+/* ── RESPONSIVE OVERRIDES ────────────────────────────────────────────────── */
+
+/* On screens narrower than 900 px (most tablets and phones):
+   - Collapse to a single column so the notes panel stacks below the video.
+   - Remove position:sticky from the sidebar (it would behave oddly in
+     single-column flow and is unnecessary when everything is scrolled linearly). */
+@media (max-width: 900px) {
+  .player-layout { grid-template-columns: 1fr; }  /* single column */
+  .player-right { position: static; }             /* no longer sticky */
+}

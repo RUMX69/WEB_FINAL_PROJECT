@@ -1,0 +1,367 @@
+/* ─── index.css ──────────────────────────────────────────────────────────────
+   Global stylesheet — applied to every page in the application.
+   Contains:
+     1. CSS Reset (remove browser default spacing/sizing quirks)
+     2. CSS Custom Properties / Design Tokens (colors, sizes, shadows)
+     3. Dark-mode theme override
+     4. Base HTML element styles
+     5. Scrollbar customisation
+     6. Reusable utility classes (layout, buttons, cards, forms, grid, spinner)
+   ─────────────────────────────────────────────────────────────────────────── */
+
+
+/* ── 1. Box-sizing Reset ─────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box; /* Include padding and border in element dimensions.
+                             Without this, adding padding to a 200px element
+                             would make it wider than 200px — very confusing.
+                             *::before / *::after targets pseudo-elements too. */
+  margin: 0;              /* Remove default browser margins from all elements. */
+  padding: 0;             /* Remove default browser padding from all elements. */
+}
+
+
+/* ── 2. Design Tokens (CSS Custom Properties) ────────────────────────────── */
+/* Custom properties (CSS variables) defined on :root are available globally.
+   Using variables instead of hard-coded values means changing one value here
+   updates the colour/size everywhere it's used. */
+
+:root {
+  /* ─ Colour Palette ─ */
+  --navy:        #2c4a6e;  /* Primary brand colour — used for headings, active states. */
+  --navy-dark:   #1e3554;  /* Darker shade of navy — used for button hover states. */
+  --navy-light:  #3d6491;  /* Lighter shade of navy — used for secondary elements. */
+  --accent:      #4a7fb5;  /* Accent blue — used for links, focus states, badges. */
+  --accent-light:#e8f0fa;  /* Very light blue background — used for active sidebar items
+                              and category badge backgrounds. */
+  --red:         #e53e3e;  /* Danger / error colour — used for delete buttons and error messages. */
+
+  /* ─ Background Colours ─ */
+  --bg:          #f0f2f5;  /* Page background — light grey. */
+  --bg-card:     #ffffff;  /* Card / panel background — pure white. */
+
+  /* ─ Border ─ */
+  --border:      #e2e8f0;  /* Subtle grey for borders and dividers. */
+
+  /* ─ Text ─ */
+  --text-primary:   #1a202c; /* Main body text — very dark grey (near black). */
+  --text-secondary: #4a5568; /* Secondary text — medium grey for labels and subtitles. */
+  --text-muted:     #718096; /* Muted / placeholder text — lighter grey. */
+
+  /* ─ Layout Dimensions ─ */
+  --sidebar-width:  270px;  /* Width of the left sidebar when it is open. */
+  --navbar-height:  60px;   /* Height of the top navigation bar. */
+
+  /* ─ Border Radius ─ */
+  --radius: 12px;  /* Default rounded-corner size for cards and containers. */
+
+  /* ─ Box Shadows ─ */
+  --shadow:    0 2px 12px rgba(0,0,0,0.08);  /* Subtle shadow — used on cards at rest. */
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);  /* Stronger shadow — used on hover / dropdowns. */
+}
+
+
+/* ── 3. Dark Mode Theme Override ─────────────────────────────────────────── */
+/* When the <html> element has data-theme="dark" (set by the settings page),
+   these variables override the :root defaults above.
+   Only variables that change in dark mode are listed here; the rest
+   (--navy, --accent, etc.) keep their :root values. */
+
+[data-theme="dark"] {
+  --bg:             #0f1923;  /* Very dark blue-black — page background in dark mode. */
+  --bg-card:        #1a2535;  /* Dark navy — card / panel background in dark mode. */
+  --border:         #2d3748;  /* Darker border for dark backgrounds. */
+  --text-primary:   #f7fafc;  /* Near-white text for readability on dark bg. */
+  --text-secondary: #cbd5e0;  /* Light grey for secondary text in dark mode. */
+  --text-muted:     #718096;  /* Muted grey — same as light mode. */
+  --navy:           #4a7fb5;  /* Lighter navy so it's visible on dark backgrounds. */
+  --accent-light:   #1a2535;  /* Dark version of the accent-light background. */
+}
+
+
+/* ── 4. Base HTML Element Styles ─────────────────────────────────────────── */
+
+html, body {
+  height: 100%; /* Ensure html and body fill the full viewport height.
+                   Required for the flex layout of the main content area
+                   to fill the screen vertically. */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  /* Sets the default font for all body text across the entire app.
+     'Inter' is the Google Font loaded in index.html.
+     sans-serif is the fallback if Inter fails to load. */
+
+  background: var(--bg);        /* Use the page background colour variable. */
+  color: var(--text-primary);   /* Default text colour — overridden per-element where needed. */
+  line-height: 1.5;             /* 1.5× the font-size as line height — improves readability. */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', sans-serif;
+  /* All heading elements use the Sora font (also loaded in index.html),
+     which is slightly more geometric and bold than Inter.
+     This creates visual distinction between headings and body copy. */
+}
+
+button {
+  cursor: pointer;          /* Always show the hand cursor on buttons. */
+  font-family: inherit;     /* Inherit the body font (browsers default buttons to system font). */
+}
+
+input, textarea {
+  font-family: inherit;     /* Same font fix for form fields. */
+}
+
+a {
+  text-decoration: none;    /* Remove the default underline on links. */
+  color: inherit;           /* Links use the surrounding text colour instead of browser-default blue. */
+}
+
+
+/* ── 5. Custom Scrollbar ─────────────────────────────────────────────────── */
+/* These -webkit- properties control the scrollbar appearance in Chrome/Edge/Safari.
+   Firefox uses the `scrollbar-color` property (not included here). */
+
+::-webkit-scrollbar {
+  width: 6px; /* Make the scrollbar thin (6px) instead of the default ~17px. */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Hide the scrollbar rail / track completely. */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e0;      /* Light grey for the draggable scrollbar thumb. */
+  border-radius: 3px;       /* Round the ends of the thumb for a pill shape. */
+}
+
+
+/* ── 6. Utility / Layout Classes ─────────────────────────────────────────── */
+
+/* Page shell layout — used in AppLayout.jsx */
+.page-layout {
+  display: flex;      /* Sidebar and main content sit side by side (row direction). */
+  min-height: 100vh;  /* The layout must be at least as tall as the viewport. */
+}
+
+/* The scrollable content area to the right of the sidebar */
+.main-content {
+  flex: 1;                           /* Take up all remaining horizontal space after the sidebar. */
+  margin-left: var(--sidebar-width); /* Push content right so the fixed sidebar doesn't overlap it. */
+  padding-top: var(--navbar-height); /* Push content down so the fixed navbar doesn't overlap it. */
+  min-height: 100vh;                 /* At least full viewport height. */
+  background: var(--bg);            /* Match the page background colour. */
+  transition: margin-left 0.3s ease;/* Smoothly animate when the sidebar opens/closes. */
+}
+
+/* When the sidebar is closed, remove the left margin so content fills the full width */
+.main-content.sidebar-collapsed {
+  margin-left: 0;
+}
+
+/* Inner container for page content — limits max width and adds padding */
+.page-inner {
+  padding: 32px 36px;   /* 32px top/bottom, 36px left/right inner padding. */
+  max-width: 1200px;    /* Content won't stretch wider than 1200px on large screens. */
+}
+
+/* Standard page heading style */
+.page-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 28px;
+  font-weight: 700;                   /* Bold. */
+  color: var(--navy);
+  text-decoration: underline;         /* Underline decorative style for page titles. */
+  text-underline-offset: 4px;         /* Space between the text and the underline. */
+  margin-bottom: 24px;                /* Space below the title before page content. */
+}
+
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+/* Base button style — shared by all button variants */
+.btn {
+  display: inline-flex;     /* Allows icon + text to sit on the same line with gap. */
+  align-items: center;      /* Vertically center icon and text. */
+  gap: 6px;                 /* 6px gap between icon and label. */
+  padding: 10px 20px;       /* Comfortable clickable area. */
+  border-radius: 8px;       /* Slightly rounded corners. */
+  font-size: 14px;
+  font-weight: 500;
+  border: none;             /* Remove default browser button border. */
+  transition: all 0.2s;     /* Smooth colour/background transition on hover. */
+}
+
+/* Primary CTA button — navy background, white text, full width */
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+  width: 100%;               /* Stretch to fill its container (used in forms). */
+  justify-content: center;   /* Center the label horizontally. */
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: var(--navy-dark); /* Darken on hover to give click feedback. */
+}
+
+/* Danger/destructive button — red border, transparent background */
+.btn-danger {
+  background: transparent;
+  color: var(--red);
+  border: 1px solid var(--red); /* Red outline to signal a destructive action. */
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.btn-danger:hover {
+  background: #fff5f5; /* Very light red tint on hover. */
+}
+
+/* Outline/secondary button — grey border, transparent background */
+.btn-outline {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.btn-outline:hover {
+  border-color: var(--navy); /* Switch to navy border on hover. */
+  color: var(--navy);
+}
+
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+
+/* Generic card container — white background with border and rounded corners */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius); /* 12px rounded corners. */
+  border: 1px solid var(--border);
+  overflow: hidden; /* Clips children (e.g. images) to the card's rounded corners. */
+}
+
+
+/* ── Form Elements ───────────────────────────────────────────────────────── */
+
+/* A label + input stacked vertically */
+.form-group {
+  display: flex;
+  flex-direction: column; /* Stack label above input. */
+  gap: 6px;               /* Space between the label and the input field. */
+}
+
+/* Small label text above an input */
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Standard text input / textarea styling */
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  outline: none;              /* Remove the blue browser focus ring (replaced below). */
+  transition: border-color 0.2s;
+}
+.form-input:focus {
+  border-color: var(--accent); /* Highlight the border in blue when the field is active. */
+  background: var(--bg-card);
+}
+.form-input::placeholder {
+  color: var(--text-muted); /* Lighter grey for placeholder hint text. */
+}
+
+/* Allow the textarea variant to be resized vertically by the user */
+textarea.form-input {
+  resize: vertical;      /* Only allow vertical resize (not horizontal, which breaks layouts). */
+  min-height: 90px;      /* Textarea is at least 90px tall. */
+}
+
+
+/* ── Error / Validation Message ──────────────────────────────────────────── */
+
+/* Displayed when an API call fails or form validation fails */
+.error-msg {
+  background: #fff5f5;         /* Light red background. */
+  color: var(--red);           /* Red text. */
+  border: 1px solid #feb2b2;  /* Pink/red border. */
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+
+/* ── Video Grid ──────────────────────────────────────────────────────────── */
+
+/* Responsive grid for video cards on the Home, Saved, and History pages */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  /* auto-fill → create as many columns as fit in the available width.
+     minmax(290px, 1fr) → each column is at least 290px wide and shares
+     remaining space equally. This makes the grid automatically responsive
+     without media queries — it collapses to fewer columns on narrow screens. */
+  gap: 20px; /* 20px gutter between every card. */
+}
+
+
+/* ── Loading Spinner ─────────────────────────────────────────────────────── */
+
+/* Centred wrapper for the spinner — used while data is loading */
+.spinner-wrap {
+  display: flex;
+  justify-content: center; /* Horizontally center the spinner. */
+  align-items: center;     /* Vertically center the spinner. */
+  padding: 60px;           /* Large padding so the spinner has breathing room. */
+}
+
+/* The animated circular spinner element */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);        /* Full grey ring. */
+  border-top-color: var(--navy);           /* Only the top arc is navy — creates the "loading" effect. */
+  border-radius: 50%;                       /* Make it a circle. */
+  animation: spin 0.7s linear infinite;   /* Rotate continuously. */
+}
+
+/* Defines the rotation keyframe animation used by the spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); } /* Rotate 360° (one full turn) per iteration. */
+}
+
+
+/* ── Empty State ─────────────────────────────────────────────────────────── */
+
+/* Shown when a list/grid has no items (no saved videos, no history, etc.) */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;       /* Lots of vertical padding to fill the page nicely. */
+  color: var(--text-muted); /* Muted grey — de-emphasised because this is a secondary message. */
+}
+.empty-state svg {
+  margin-bottom: 16px;
+  opacity: 0.4; /* Make the illustration icon faint so it doesn't compete with the text. */
+}
+.empty-state h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--text-secondary); /* Slightly darker than muted for the title. */
+}
+.empty-state p {
+  font-size: 14px; /* Smaller descriptive text below the title. */
+}

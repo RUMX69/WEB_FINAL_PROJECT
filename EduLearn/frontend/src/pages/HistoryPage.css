@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   HistoryPage.css
+   Styles for the Watch History page.
+   The page is split into two columns:
+     LEFT  – a scrollable list of recently watched videos (thumbnail + title + date)
+     RIGHT – a sidebar with bulk-action buttons (e.g. "Clear history", "Pause history")
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── PAGE LAYOUT ─────────────────────────────────────────────────────────── */
+
+/* Two-column grid for the history list and the management sidebar.
+   1fr       → the video list takes all remaining space
+   320px     → the sidebar has a fixed width, staying compact
+   gap:32px keeps a clear visual separation between the columns.
+   align-items:start prevents the sidebar from stretching to the list's height. */
+.history-layout { display: grid; grid-template-columns: 1fr 320px; gap: 32px; align-items: start; }
+
+
+/* ── VIDEO LIST ──────────────────────────────────────────────────────────── */
+
+/* Outer container for all history item rows.
+   column flex + gap:10px stacks items with a small consistent gap. */
+.history-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* A single history entry (thumbnail + info + context-menu button).
+   Horizontally arranged with flex, vertically centred.
+   padding:0 because internal elements handle their own padding.
+   cursor:pointer signals the row is clickable (navigates to the video).
+   position:relative is needed so the absolute-positioned dropdown menu inside
+   can be anchored to this row. */
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+  cursor: pointer;
+  transition: box-shadow 0.2s;   /* smooth shadow animation on hover */
+  overflow: visible;             /* allows the dropdown to extend beyond the row */
+  position: relative;
+}
+/* Shadow appears when the user hovers, giving a "lift" feedback effect. */
+.history-item:hover { box-shadow: var(--shadow); }
+
+/* Thumbnail image on the left of each history row.
+   Fixed width/height with object-fit:cover keeps all thumbnails the same
+   size regardless of the source image's dimensions.
+   border-radius only on the left two corners so it merges with the card edge.
+   flex-shrink:0 prevents the thumbnail from squashing when space is tight.
+   var(--border) is a subtle grey used as the placeholder before the image loads. */
+.history-thumb { width: 120px; height: 68px; object-fit: cover; border-radius: 8px 0 0 8px; flex-shrink: 0; background: var(--border); }
+
+/* Middle section containing the video title and watched date.
+   flex:1 makes it fill all horizontal space between thumbnail and menu button.
+   padding:10px top/bottom gives vertical breathing room.
+   min-width:0 is required so text truncation works inside a flex child. */
+.history-info { flex: 1; padding: 10px 0; min-width: 0; }
+
+/* Video title.
+   overflow:hidden + text-overflow:ellipsis + white-space:nowrap truncates
+   long titles to a single line with a "…" indicator. */
+.history-title { font-size: 14px; font-weight: 500; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Small date/time stamp shown beneath the title. */
+.history-date { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Container for the three-dot context menu button on the right of each row.
+   position:relative anchors the dropdown that appears on click. */
+.history-menu { padding: 0 12px; position: relative; }
+
+
+/* ── SIDEBAR ─────────────────────────────────────────────────────────────── */
+
+/* Heading above the sidebar button list. */
+.history-side-title { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 14px; }
+
+/* Wrapper stacking all action buttons vertically.
+   gap:2px keeps them nearly flush, so they look like a segmented button group. */
+.history-side-actions { display: flex; flex-direction: column; gap: 2px; }
+
+/* Individual action button in the sidebar (e.g. "Clear all history").
+   space-between pushes any secondary element (arrow, count) to the far right.
+   Background and border give it a card-like raised appearance.
+   transition:background 0.15s makes the hover colour change smooth. */
+.history-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+/* Lighten the background on hover for a subtle interaction cue. */
+.history-action-btn:hover { background: var(--bg); }
+
+
+/* ── RESPONSIVE OVERRIDES ────────────────────────────────────────────────── */
+
+/* On screens narrower than 800 px (tablets in portrait / phones):
+   Collapse to a single-column layout so the sidebar stacks below the list
+   instead of sitting awkwardly beside it. */
+@media (max-width: 800px) {
+  .history-layout { grid-template-columns: 1fr; }
+}

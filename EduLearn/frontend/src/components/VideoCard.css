@@ -1,0 +1,180 @@
+/* ─── VideoCard.css ──────────────────────────────────────────────────────────
+   Styles for the VideoCard component — the clickable card shown in the video grid.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+
+/* ── Card Container ──────────────────────────────────────────────────────── */
+
+.video-card {
+  background: var(--bg-card);         /* White (light) / dark card (dark mode). */
+  border-radius: var(--radius);       /* 12px rounded corners on all four corners. */
+  overflow: hidden;                   /* Clip the thumbnail image to the card's
+                                         rounded corners (without this, the image
+                                         corners would stick out as squares). */
+  cursor: pointer;                    /* Hand/pointer cursor — signals the whole card is clickable. */
+  border: 1px solid var(--border);   /* Thin grey outline to separate cards from the background. */
+  transition: box-shadow 0.2s, transform 0.2s;
+  /* Smoothly animate shadow depth and vertical position on hover (200ms). */
+}
+
+.video-card:hover {
+  box-shadow: var(--shadow-lg);  /* Deeper shadow (0 8px 30px) lifts the card visually. */
+  transform: translateY(-2px);   /* Move card 2px upward — the classic "lift" hover effect. */
+}
+
+
+/* ── Thumbnail Wrapper ────────────────────────────────────────────────────── */
+
+.video-card-thumb {
+  position: relative;    /* Establishes a positioning context so the play overlay
+                            can be absolutely positioned on top of the image. */
+  width: 100%;
+  aspect-ratio: 16/9;    /* Always maintain the 16:9 widescreen ratio (e.g. 16:9 = 1.77:1).
+                            The height auto-adjusts based on the card's width. */
+  background: #e2e8f0;   /* Light grey placeholder colour shown before the image loads. */
+  overflow: hidden;       /* Clip the image if it overflows (needed for object-fit: cover). */
+}
+
+/* The thumbnail <img> tag */
+.video-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* Scale the image to fill the container's dimensions.
+                            If the image aspect ratio doesn't match 16:9 exactly,
+                            the image is cropped from the edges — never distorted. */
+  display: block;        /* Remove the small gap browsers add below inline images. */
+}
+
+
+/* ── Play Overlay (shown on hover) ───────────────────────────────────────── */
+
+.play-overlay {
+  position: absolute;    /* Positioned relative to .video-card-thumb (its nearest
+                            relative ancestor). */
+  inset: 0;              /* Shorthand for top:0; right:0; bottom:0; left:0 —
+                            stretches the overlay to cover the entire thumbnail. */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the play button SVG both horizontally and vertically. */
+  opacity: 0;            /* Hidden by default (invisible but still in the DOM). */
+  transition: opacity 0.2s; /* Fade in/out over 200ms. */
+}
+
+/* Show the play overlay when the card is hovered */
+.video-card:hover .play-overlay {
+  opacity: 1;
+  /* When the user hovers over the card, the overlay fades in,
+     revealing the translucent play button over the thumbnail. */
+}
+
+
+/* ── Info Section (below thumbnail) ─────────────────────────────────────── */
+
+.video-card-info {
+  padding: 10px 14px 12px;
+  /* 10px top, 14px left/right, 12px bottom — breathing room for the text below the image. */
+}
+
+/* Row containing the title and the three-dot menu */
+.video-card-meta {
+  display: flex;
+  align-items: flex-start; /* Align items to the top — important when the title wraps to 2 lines,
+                               so the menu button stays at the top rather than centred vertically. */
+  gap: 8px;                /* 8px gap between the title and the menu button. */
+}
+
+/* Placeholder for an avatar image if the design adds one in the future */
+.video-card-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;   /* Circular avatar. */
+  background: #718096;  /* Grey fallback colour. */
+  flex-shrink: 0;       /* Don't shrink this when title text is long. */
+  margin-top: 2px;      /* Slight nudge down to align visually with the first line of the title. */
+}
+
+/* Video title text — clamped to 2 lines */
+.video-card-title {
+  flex: 1;              /* Grow to fill all available width, pushing the menu to the right. */
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;     /* Slightly tighter line-height for the compact card design. */
+
+  /* CSS multi-line text truncation (Webkit-only — supported in all modern browsers) */
+  display: -webkit-box;            /* Required for -webkit-line-clamp to work. */
+  -webkit-line-clamp: 2;           /* Truncate text after 2 lines. */
+  -webkit-box-orient: vertical;    /* Required companion property for line-clamp. */
+  overflow: hidden;                /* Hide text beyond the 2-line limit, showing "…". */
+}
+
+
+/* ── Three-Dot Menu ──────────────────────────────────────────────────────── */
+
+/* Wrapper div — provides the positioning context for the dropdown */
+.video-card-menu {
+  position: relative;  /* Makes the dropdown position relative to this wrapper,
+                          not the whole page. */
+  flex-shrink: 0;      /* Prevent the menu from shrinking when the title is long. */
+}
+
+/* The ⋮ button that opens/closes the menu */
+.menu-dots {
+  background: none;
+  border: none;
+  font-size: 18px;           /* Large enough to be easily clickable. */
+  color: var(--text-muted);  /* Grey by default. */
+  padding: 2px 6px;          /* Small padding for a comfortable click target. */
+  border-radius: 4px;
+  line-height: 1;            /* Prevent extra vertical space from the character's line-height. */
+  cursor: pointer;
+}
+.menu-dots:hover {
+  background: var(--bg);          /* Light grey background on hover. */
+  color: var(--text-primary);    /* Darker icon colour on hover. */
+}
+
+/* The dropdown panel that appears below the ⋮ button */
+.menu-dropdown {
+  position: absolute;
+  right: 0;          /* Align the dropdown's right edge with the ⋮ button's right edge.
+                        This prevents the dropdown from overflowing off-screen to the right. */
+  top: 100%;         /* Place the dropdown immediately below the ⋮ button. */
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg); /* Floating dropdown shadow to lift it above the card. */
+  z-index: 50;                  /* Ensure the dropdown renders on top of nearby cards. */
+  min-width: 100px;             /* Minimum width so "Unsave" doesn't get truncated. */
+  overflow: hidden;             /* Clip the button's hover background to the rounded corners. */
+}
+
+/* Buttons inside the dropdown menu */
+.menu-dropdown button {
+  display: block;     /* Stack multiple buttons vertically if there are more than one. */
+  width: 100%;        /* Full width so the hover background fills the dropdown. */
+  text-align: left;
+  padding: 9px 14px;
+  font-size: 13px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.menu-dropdown button:hover {
+  background: var(--bg); /* Light grey row highlight on hover. */
+}
+
+
+/* ── Category Badge ──────────────────────────────────────────────────────── */
+
+.video-category {
+  display: inline-block;       /* Renders as a block but only as wide as its content. */
+  margin-top: 6px;             /* Space between the title row and the badge. */
+  font-size: 11px;             /* Small text for a "tag" look. */
+  color: var(--accent);        /* Accent blue text. */
+  background: var(--accent-light); /* Light blue background — matches the sidebar active state. */
+  padding: 2px 8px;
+  border-radius: 99px;         /* Fully rounded "pill" shape regardless of content width. */
+  font-weight: 500;
+}

@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NotesPage.css
+   Styles for the Notes page, where users can browse and manage all notes
+   they have taken across videos.
+   Notes are grouped by video in collapsible accordion panels.
+   A search bar at the top allows filtering notes by keyword.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── SEARCH BAR ──────────────────────────────────────────────────────────── */
+
+/* Outer flex row that centres the search bar horizontally on the page.
+   margin-bottom:24px separates the bar from the note groups below. */
+.notes-search-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
+
+/* Inner container for the search input and the icon overlay.
+   position:relative is necessary so the absolutely-positioned icon
+   can be placed inside the input field visually.
+   max-width:440px keeps the bar from stretching across the whole page. */
+.notes-search-bar { position: relative; width: 100%; max-width: 440px; }
+
+/* Give the search input extra right-padding so typed text never overlaps
+   the magnifying-glass icon on the right.
+   border-radius:24px creates the "pill" / rounded rectangle shape. */
+.notes-search-bar .form-input { padding-right: 40px; border-radius: 24px; }
+
+/* The magnifying-glass icon overlaid on the right side of the input.
+   position:absolute + right:14px + top:50% + translateY(-50%) centres it
+   vertically and pins it to the right edge regardless of input height.
+   pointer-events:none prevents the icon from blocking clicks on the input. */
+.search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+
+/* ── NOTE GROUPS (accordion) ─────────────────────────────────────────────── */
+
+/* Outer wrapper that stacks all video-note groups vertically.
+   gap:14px gives a comfortable gap between each group card. */
+.notes-groups { display: flex; flex-direction: column; gap: 14px; }
+
+/* Individual group container (one per video).
+   overflow:hidden clips the child elements to the card's border-radius. */
+.note-group { overflow: hidden; }
+
+/* Clickable header row of each group (thumbnail + video title + note count + toggle button).
+   space-between pushes the toggle button to the far right.
+   cursor:pointer + user-select:none signal it's interactive without selecting text. */
+.note-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-card);
+}
+/* Subtle background colour shift on hover to indicate interactivity. */
+.note-group-header:hover { background: var(--bg); }
+
+/* Left cluster inside the header: thumbnail + title + note count.
+   flex:1 + min-width:0 lets text truncation work correctly. */
+.note-group-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+
+/* Small video thumbnail shown in each group header.
+   object-fit:cover fills the fixed dimensions without stretching.
+   The thumbnail is also a cursor:pointer target so clicking it can
+   navigate to the video (this is separate from toggling the accordion). */
+.note-group-thumb { width: 52px; height: 34px; object-fit: cover; border-radius: 6px; cursor: pointer; }
+
+/* Video title inside the group header.
+   flex:1 + overflow/ellipsis truncates long titles cleanly. */
+.note-group-title { font-size: 14px; font-weight: 600; color: var(--text-primary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Small label showing how many notes are in this group, e.g. "(3 notes)". */
+.note-count { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+
+/* The circular toggle (chevron) button on the far right of the header.
+   The navy background + rounded shape makes it look like a dedicated control.
+   transition:transform 0.2s enables a smooth rotation animation. */
+.collapse-btn {
+  width: 32px; height: 32px;
+  background: var(--navy);
+  border: none;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;    /* never squish the button */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+/* When the group is open, rotate the chevron 180° to point upward,
+   visually communicating that clicking will collapse the section. */
+.collapse-btn.open { transform: rotate(180deg); }
+
+/* SVG chevron icon inside the button.
+   stroke:white on a navy background for legibility.
+   fill:none + specific stroke-width produce a clean outlined arrow. */
+.collapse-btn svg path { stroke: white; fill: none; stroke-width: 2.5; }
+
+/* The collapsible body that shows the individual notes.
+   border-top visually separates the note rows from the header. */
+.note-group-body { border-top: 1px solid var(--border); }
+
+
+/* ── INDIVIDUAL NOTE ROWS ────────────────────────────────────────────────── */
+
+/* A single note entry inside a group.
+   flex + align-items:flex-start lets the timestamp tag and note text
+   align at the top even when the note spans multiple lines.
+   border-bottom divides notes from one another; the last child override
+   removes the border from the final row. */
+.note-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.55;
+}
+.note-row:last-child { border-bottom: none; }  /* no divider after the last note */
+
+/* The timestamp badge (e.g. "2:34") shown on the left of each note.
+   var(--accent) colour (blue/teal) distinguishes it from the note text.
+   flex-shrink:0 keeps it at its natural width regardless of note length.
+   margin-top:2px aligns it visually with the first line of the note text. */
+.note-ts-tag { color: var(--accent); font-size: 12px; font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+
+/* The note text body.
+   flex:1 makes it fill all remaining horizontal space. */
+.note-body { flex: 1; }
+
+/* Group of action icon buttons for each note (edit, delete).
+   flex-shrink:0 prevents them from collapsing on narrow viewports. */
+.note-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* When a note is being edited, the text area and its action buttons
+   are placed in a column-flex container to stack them vertically. */
+.note-edit-row { flex: 1; display: flex; flex-direction: column; }

@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   HelpPage.css
+   Styles for the Help & Support page.
+   The page is divided into two sections:
+     1. A help card showing quick-action links (e.g. contact email, docs).
+     2. An FAQ accordion where each question expands/collapses on click.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── HELP CARD (quick links) ─────────────────────────────────────────────── */
+
+/* Container for the quick-help rows (e.g. "Email us", "View docs").
+   max-width:720px stops the content from stretching too wide on large screens.
+   column flex + gap:18px stacks each help-row vertically with consistent spacing. */
+.help-card { padding: 28px 32px; display: flex; flex-direction: column; gap: 18px; max-width: 720px; }
+
+/* An individual help item row (icon + text).
+   flex + align-items:center lines up the icon and label on the same baseline.
+   gap:14px provides comfortable spacing between the icon and the text. */
+.help-row { display: flex; align-items: center; gap: 14px; font-size: 16px; color: var(--text-primary); }
+
+
+/* ── FAQ ACCORDION ───────────────────────────────────────────────────────── */
+
+/* Outer wrapper for the entire FAQ section.
+   margin-top:32px visually separates it from the help card above. */
+.faq-section { margin-top: 32px; max-width: 720px; }
+
+/* Section heading above the accordion list. */
+.faq-title { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 14px; }
+
+/* Each FAQ item is a native HTML <details> element (which supports open/close
+   natively in the browser without JavaScript).
+   margin-bottom:8px stacks items with a small gap between them.
+   overflow:hidden clips child elements to the rounded corners. */
+.faq-item { margin-bottom: 8px; border-radius: var(--radius); overflow: hidden; cursor: pointer; }
+
+/* When a <details> element is open (i.e. the user clicked to expand it),
+   add a shadow to make it appear "lifted", indicating it is active. */
+.faq-item[open] { box-shadow: var(--shadow); }
+
+/* The <summary> element that acts as the clickable question header.
+   list-style:none removes the native browser disclosure triangle.
+   user-select:none prevents accidental text selection on rapid clicks.
+   background var(--bg-card) gives it a card-like background. */
+.faq-q {
+  padding: 16px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  list-style: none;          /* hides the native <details> disclosure marker */
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+/* Remove the default WebKit/Blink ▶ disclosure arrow from <summary>. */
+.faq-q::-webkit-details-marker { display: none; }
+
+/* Custom "+" icon prepended to each question via pseudo-element.
+   The "＋" is a full-width Unicode plus sign that renders consistently.
+   margin-right:10px provides spacing between the icon and the question text. */
+.faq-q::before { content: "＋"; margin-right: 10px; color: var(--navy); font-size: 14px; }
+
+/* When the <details> is open, switch the "+" icon to "−" to indicate the
+   item can be collapsed. The attribute selector [open] targets the parent
+   <details> and the descendant combinator reaches down to .faq-q::before. */
+.faq-item[open] .faq-q::before { content: "－"; }
+
+/* The answer body revealed when a question is expanded.
+   Padding on left/right aligns it with the question text (accounting for the icon).
+   Padding-bottom leaves space beneath the last line of text.
+   line-height:1.6 ensures comfortable reading of multi-sentence answers.
+   Same var(--bg-card) background as the question keeps the open item unified. */
+.faq-a { padding: 0 20px 16px; font-size: 14px; color: var(--text-secondary); line-height: 1.6; background: var(--bg-card); }

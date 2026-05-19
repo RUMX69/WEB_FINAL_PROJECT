@@ -1,0 +1,202 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AdminPage.css
+   Styles for the Admin dashboard where privileged users can add new videos
+   and manage the existing video list (edit / delete).
+   The page is split into two main areas:
+     1. The "add video" form at the top.
+     2. A scrollable list of existing video rows below.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── PAGE HEADER ─────────────────────────────────────────────────────────── */
+
+/* Top header bar that holds the page title and any action buttons.
+   flex + space-between pushes the title to the left and buttons to the right.
+   margin-bottom gives space before the form card below. */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+
+/* ── ADD-VIDEO FORM CARD ─────────────────────────────────────────────────── */
+
+/* Wrapper card around the "Add new video" form.
+   padding:28px gives inner breathing room.
+   margin-bottom separates it from the video list below. */
+.admin-form-wrap {
+  padding: 28px;
+  margin-bottom: 28px;
+}
+
+/* Section title inside the form card (e.g. "Add New Video"). */
+.admin-form-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 18px;
+}
+
+/* The <form> element itself.
+   column flex + gap stacks each form field/row vertically with even spacing. */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* A two-column grid row used to place two related inputs side by side
+   (e.g. "Title" and "YouTube ID").
+   gap:16px keeps them from touching each other. */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Small helper text shown beneath an input field.
+   display:block ensures it sits on its own line below the input,
+   rather than inline beside it. */
+.form-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* Container for the thumbnail preview image and its URL input.
+   column flex stacks them: URL input above, preview image below. */
+.admin-preview { display: flex; flex-direction: column; gap: 8px; }
+
+/* The actual thumbnail preview image shown after the admin pastes a URL.
+   Fixed width keeps it a consistent size regardless of the image's
+   intrinsic dimensions.
+   border-radius + border give it a polished card appearance. */
+.admin-thumb-preview {
+  width: 240px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Row of action buttons at the bottom of the form (e.g. "Save", "Cancel").
+   flex + gap lays them out horizontally with a small gap between them. */
+.admin-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+
+/* ── VIDEO LIST ──────────────────────────────────────────────────────────── */
+
+/* Outer container for the list of existing videos.
+   column flex + gap creates a stack of video rows with even spacing. */
+.admin-video-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* A single video row showing thumbnail, metadata, and action buttons.
+   flex + align-items:center keeps all elements vertically centred.
+   padding gives inner breathing room on all sides. */
+.admin-video-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+}
+
+/* Thumbnail image on the left of each row.
+   Fixed width/height with object-fit:cover crops the image neatly.
+   flex-shrink:0 prevents it from squashing when the row is narrow. */
+.admin-video-thumb {
+  width: 120px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #e2e8f0;  /* grey placeholder shown while image loads */
+  flex-shrink: 0;
+}
+
+/* Middle section holding the title, YouTube ID, and tags.
+   flex:1 makes it fill all available horizontal space.
+   min-width:0 is required for text truncation to work inside a flex child. */
+.admin-video-info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Video title displayed prominently in the info section.
+   overflow:hidden + text-overflow:ellipsis + white-space:nowrap together
+   truncate long titles to a single line with a "…" at the end. */
+.admin-video-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Small row that groups the YouTube ID badge and any other meta items. */
+.admin-video-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* The raw YouTube video ID shown in a monospace font for clarity
+   (e.g. "dQw4w9WgXcQ"). Helps the admin verify the correct video is linked. */
+.admin-yt-id {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Tags / categories associated with the video, shown as a comma-separated list. */
+.admin-tags {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Cluster of action buttons (edit, delete) on the far right of each row.
+   flex-shrink:0 stops them from collapsing as the row gets narrower. */
+.admin-video-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+
+/* ── FEEDBACK MESSAGES ───────────────────────────────────────────────────── */
+
+/* Green success notification shown after a video is saved or deleted.
+   Inline-styled with green background/text/border to look like a toast.
+   margin-bottom separates it from the content below. */
+.success-msg {
+  background: #f0fff4;          /* very light green background */
+  color: #276749;               /* dark green text for contrast */
+  border: 1px solid #9ae6b4;   /* medium green border */
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+
+/* ── RESPONSIVE OVERRIDES ────────────────────────────────────────────────── */
+
+/* On screens narrower than 600 px (phones):
+   - Collapse the two-column form-row to a single column so fields don't
+     become unreadably narrow.
+   - Allow video rows to wrap so the thumbnail, info, and actions stack
+     vertically instead of all fitting on one cramped line. */
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }          /* single-column form */
+  .admin-video-row { flex-wrap: wrap; }              /* row children wrap */
+}

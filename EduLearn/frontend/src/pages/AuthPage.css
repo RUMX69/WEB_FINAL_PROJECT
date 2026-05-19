@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AuthPage.css
+   Styles for the Login / Register page (authentication).
+   The page uses a two-column split layout:
+     LEFT  – branded hero panel with app name and tagline (blue/grey background)
+     RIGHT – a white card containing the login or register form
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── PAGE WRAPPER ────────────────────────────────────────────────────────── */
+
+/* Full-viewport container that holds both the left and right panels.
+   min-height:100vh ensures the page always fills the entire browser window
+   even when content is short.
+   display:flex places the two panels side by side in a row (default direction). */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  background: #8fa8bc;   /* muted steel-blue applied to the left panel background */
+}
+
+
+/* ── LEFT PANEL (branding / hero) ────────────────────────────────────────── */
+
+/* The left branding half.
+   flex:1 makes it take up all remaining width after the right panel claims its
+   fixed minimum.
+   column flex centres the brand text vertically with generous padding. */
+.auth-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+}
+
+/* Large bold app name displayed on the left panel (e.g. "WatchWise").
+   Sora font at 48 px / weight 800 creates a strong brand impression.
+   color:white ensures legibility on the blue background. */
+.auth-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: white;
+  line-height: 1;  /* tighter than normal so ascenders/descenders don't create gaps */
+}
+
+/* A <span> wrapping part of the brand name for a two-tone colour accent.
+   var(--navy-dark) is a very dark navy that stands out on the blue panel. */
+.brand-accent {
+  color: var(--navy-dark);
+}
+
+/* Tagline / subtitle beneath the app name (e.g. "Your personal video library").
+   rgba(255,255,255,0.85) is white at 85% opacity – slightly softer than the title.
+   letter-spacing adds a subtle airy feeling to the text. */
+.auth-tagline {
+  margin-top: 12px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.02em;
+}
+
+
+/* ── RIGHT PANEL (form card) ─────────────────────────────────────────────── */
+
+/* The right half of the split layout that contains the form card.
+   flex centering (align-items + justify-content) places the card dead-centre.
+   min-width:440px ensures the form never collapses below a comfortable reading
+   width on wider screens. */
+.auth-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  min-width: 440px;
+}
+
+/* The white card containing the auth form fields and submit button.
+   border-radius:24px gives it prominent rounded corners.
+   max-width:400px stops it from stretching too wide on large monitors.
+   box-shadow provides a pronounced lift effect that separates it from the panel. */
+.auth-card {
+  background: white;
+  border-radius: 24px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+/* Title at the top of the card (e.g. "Sign In" or "Create Account").
+   text-align:center keeps it centred above the form fields. */
+.auth-card-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 28px;
+  color: var(--text-primary);
+}
+
+/* The <form> element inside the card.
+   column flex + gap stacks each form group (label + input) vertically. */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* "Forgot password?" link row – right-aligned to match common convention.
+   Negative margin-top pulls it up slightly to close the gap left by the
+   normal gap spacing. */
+.auth-forgot {
+  text-align: right;
+  margin-top: -4px;
+}
+/* The anchor tag inside the forgot-password row.
+   var(--accent) is the brand accent colour (e.g. a blue/teal).
+   text-decoration:none removes the default underline. */
+.auth-forgot a {
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+}
+/* Show underline on hover to confirm it's a clickable link. */
+.auth-forgot a:hover { text-decoration: underline; }
+
+/* "Don't have an account? Sign up" switcher row shown below the submit button.
+   Centred and slightly muted to avoid competing with the primary CTA. */
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+/* The "Sign up" / "Log in" link within the switcher row. */
+.auth-switch a {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+/* Fine-tune the form-group and form-label styles specifically inside auth-form.
+   gap:4px reduces the space between label and input to look more compact. */
+.auth-form .form-group { gap: 4px; }
+.auth-form .form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+
+/* ── RESPONSIVE OVERRIDES ────────────────────────────────────────────────── */
+
+/* On screens narrower than 680 px (phones and small tablets):
+   - Stack the two panels vertically instead of side by side.
+   - Shrink the left panel's padding and set flex:0 so it only takes as much
+     height as its content (brand name + tagline), not 50 % of the screen.
+   - Remove the right panel's min-width so it can be as narrow as needed.
+   - Reduce the brand font size so it fits on small screens without overflow. */
+@media (max-width: 680px) {
+  .auth-page { flex-direction: column; }             /* stack panels vertically */
+  .auth-left { padding: 40px 32px 20px; flex: 0; }  /* compact top hero area */
+  .auth-right { min-width: 0; padding: 0 16px 40px; }
+  .auth-brand { font-size: 36px; }
+}

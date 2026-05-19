@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- DOCTYPE tells the browser this is an HTML5 document (the modern standard). -->
+
+<html lang="en">
+<!-- The root <html> element wraps all page content.
+     lang="en" declares the page language as English — important for accessibility tools
+     and search engines. -->
+
+  <head>
+  <!-- <head> contains metadata (info about the page) that is NOT displayed on screen. -->
+
+    <meta charset="UTF-8" />
+    <!-- charset="UTF-8" sets the character encoding so the browser can correctly
+         display text including letters, symbols, and emoji from all languages. -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport meta tag makes the site responsive (mobile-friendly).
+         width=device-width → the layout width equals the device's screen width.
+         initial-scale=1.0 → do not zoom in or out on first load. -->
+
+    <title>EduLearn — Learn Smarter. Grow Further.</title>
+    <!-- <title> sets the text shown in the browser tab and in search engine results. -->
+
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <!-- Sets the small favicon icon shown in the browser tab.
+         href="/logo.png" points to a PNG image at the root of the public folder.
+         rel="icon" tells the browser this link is a shortcut/favicon icon. -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- preconnect tells the browser to open a TCP connection to fonts.googleapis.com
+         early, before the font is actually needed. This reduces latency when
+         the real font request is made. -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Same early-connection optimization for fonts.gstatic.com, which is where
+         Google actually serves the font files from.
+         crossorigin is required here because the font files are loaded cross-origin
+         (from a different domain) and need CORS headers. -->
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Loads two Google Fonts:
+         - "Sora" in weights 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
+           → used for headings throughout the app.
+         - "Inter" in weights 400 and 500
+           → used for body text and UI elements.
+         display=swap → text remains visible during font load using a system fallback
+         font, then swaps to Sora/Inter once downloaded. Prevents invisible text. -->
+
+  </head>
+
+  <body>
+  <!-- <body> contains everything the user actually sees on the page. -->
+
+    <div id="root"></div>
+    <!-- This empty <div> is the "mount point" for the React application.
+         React will inject all of its components into this element at runtime.
+         The id="root" is referenced in main.jsx via document.getElementById("root"). -->
+
+    <script type="module" src="/src/main.jsx"></script>
+    <!-- Loads the React entry-point script.
+         type="module" tells the browser this is an ES Module (modern JS with import/export).
+         Vite (the build tool) intercepts this in development to serve the JSX file
+         and in production replaces it with the compiled bundle. -->
+
+  </body>
+</html>

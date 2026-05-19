@@ -1,0 +1,98 @@
+/* ─── Sidebar.css ────────────────────────────────────────────────────────────
+   Styles for the left navigation sidebar (Sidebar.jsx).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+
+/* ── Sidebar Panel ───────────────────────────────────────────────────────── */
+
+.sidebar {
+  position: fixed;            /* Stays in place while the page content scrolls. */
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width); /* 270px — matches the margin-left on .main-content. */
+  height: 100vh;               /* Full viewport height — always fills the screen vertically. */
+  background: var(--bg-card);  /* White (light) / dark card (dark mode). */
+  border-right: 1px solid var(--border); /* Subtle separator from the main content area. */
+  z-index: 100;                /* Below the navbar (z-index:200) but above page content. */
+  display: flex;
+  flex-direction: column;      /* Stack <nav> vertically inside the sidebar. */
+  padding-top: var(--navbar-height); /* 60px — push nav content below the fixed navbar. */
+  transition: transform 0.3s ease;
+  /* When the sidebar opens or closes, animate the slide using CSS transform.
+     0.3s ease → 300ms with an ease timing function (starts fast, slows down). */
+}
+
+/* ── Closed (hidden) state ──────────────────────────────────────────────── */
+
+.sidebar.closed {
+  transform: translateX(-100%);
+  /* Slide the entire sidebar panel 100% of its own width to the LEFT,
+     moving it completely off-screen.
+     The transition on .sidebar animates this change smoothly. */
+}
+
+
+/* ── Navigation Container ────────────────────────────────────────────────── */
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column; /* Stack the two groups and the divider vertically. */
+  flex: 1;                /* Grow to fill the full height of the sidebar below the padding. */
+  padding: 20px 0;        /* 20px breathing room at the top and bottom of the nav. */
+  gap: 4px;               /* Small gap between groups. */
+}
+
+
+/* ── Link Groups (top / bottom) ──────────────────────────────────────────── */
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column; /* Stack NavLinks vertically. */
+  gap: 2px;               /* 2px gap between individual link items. */
+  padding: 0 16px;        /* 16px horizontal padding so items don't touch the edges. */
+}
+
+
+/* ── Individual Navigation Link ──────────────────────────────────────────── */
+
+.sidebar-item {
+  display: flex;
+  align-items: center;   /* Vertically center icon and label text. */
+  gap: 16px;             /* Space between the SVG icon and the text label. */
+  padding: 12px 16px;    /* Comfortable click target — 12px top/bottom, 16px left/right. */
+  border-radius: 10px;   /* Rounded corners on the hover/active background pill. */
+  color: var(--text-secondary); /* Default grey text and icon colour. */
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.15s; /* Fast transition for background colour and text colour changes. */
+  text-decoration: none; /* Remove default link underline. */
+}
+
+/* Hover state — background tints blue, text turns navy */
+.sidebar-item:hover {
+  background: var(--accent-light); /* Very light blue background. */
+  color: var(--navy);              /* Text and icon turn navy blue. */
+}
+
+/* Active state — the link that matches the current URL */
+.sidebar-item.active {
+  background: var(--accent-light); /* Same light blue background as hover. */
+  color: var(--navy);              /* Navy text and icon. */
+  font-weight: 600;                /* Slightly bolder text to visually emphasise the current page. */
+}
+
+/* Prevent SVG icons from shrinking when the label text is long */
+.sidebar-item svg {
+  flex-shrink: 0;
+  /* Without this, the flexbox algorithm might compress the icon to make room
+     for the text. flex-shrink:0 prevents that. */
+}
+
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+
+.sidebar-divider {
+  height: 1px;                    /* A horizontal rule (thin line). */
+  background: var(--border);      /* Same grey as other border colours. */
+  margin: 12px 32px;              /* Indented 32px on each side so it doesn't touch the edges. */
+}

@@ -1,0 +1,154 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AboutUsPage.css
+   Styles for the "About Us" page, which shows the app's mission statement
+   (with a logo card on the right) and a grid of team member cards below.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── MISSION SECTION ────────────────────────────────────────────────────── */
+
+/* Outer wrapper for the mission block.
+   Uses CSS Grid with two columns:
+     - 1fr   → the text takes up all remaining space
+     - auto  → the logo card only takes as much width as it needs
+   gap:24px keeps a comfortable space between text and logo.
+   padding/margin-bottom give breathing room inside and below the block. */
+.about-mission {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;   /* vertically centres the logo card beside the text */
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+/* Page / section title (e.g. "Our Mission").
+   Uses the Sora brand font at a large weight for visual hierarchy.
+   The underline with a custom offset gives a stylised, non-default look.
+   var(--navy) references a CSS custom property defined globally, keeping
+   colours consistent across the whole app. */
+.about-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 5px;  /* pushes the underline slightly below the baseline */
+  margin-bottom: 14px;
+}
+
+/* All <p> tags inside the mission text container.
+   font-size:15px is slightly smaller than the title to create hierarchy.
+   line-height:1.75 gives generous line spacing for comfortable reading.
+   max-width:580px stops lines becoming too long on wide screens. */
+.mission-text p { font-size: 15px; line-height: 1.75; color: var(--text-secondary); max-width: 580px; }
+
+/* The logo / brand card that sits to the right of the mission text.
+   Uses column flex so the icon, name, and sub-text stack vertically.
+   Background var(--bg) and border-radius give it a soft "card" appearance. */
+.mission-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* horizontally centres all children */
+  gap: 12px;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 24px 28px;
+  min-width: 180px;      /* prevents the card from collapsing too narrow */
+  text-align: center;
+}
+
+/* The coloured icon square at the top of the logo card.
+   The linear-gradient (dark navy → mid blue) matches the overall app palette.
+   border-radius:18px rounds the corners more aggressively for a "squircle" feel.
+   flex + center alignment places the icon SVG perfectly in the middle. */
+.mission-logo-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #1e3554, #4a7fb5);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* App name shown under the icon inside the logo card. */
+.mission-logo-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* Small caption / tagline below the app name (e.g. "LEARN · WATCH · GROW").
+   letter-spacing:0.1em spreads the characters apart for an "all-caps label" look.
+   var(--text-muted) is a lighter grey, indicating secondary importance. */
+.mission-logo-sub {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+
+/* ── TEAM SECTION ────────────────────────────────────────────────────────── */
+
+/* Outer wrapper for the team member grid section.
+   var(--bg) keeps it on the same background layer as the rest of the page. */
+.team-section { padding: 28px; background: var(--bg); }
+
+/* Auto-fill responsive grid for team cards.
+   minmax(160px, 1fr) means each column is at least 160 px wide but can grow.
+   The browser automatically calculates how many columns fit in the container,
+   so no media query is needed for the column count itself. */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+/* Individual team member card.
+   var(--bg-card) is slightly lighter/darker than --bg to lift cards off the page.
+   The border gives a subtle edge definition without a heavy shadow. */
+.team-card {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+/* Circular avatar container.
+   width/height + border-radius:50% creates a perfect circle.
+   overflow:hidden clips the image to the circle shape.
+   margin: 0 auto centres it horizontally; margin-bottom separates it from the name. */
+.team-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent-light);  /* fallback colour if the image hasn't loaded */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  overflow: hidden;
+}
+
+/* Member's full name displayed below the avatar. */
+.team-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+
+/* Secondary info (role, department, etc.) below the name.
+   line-height:1.5 gives readable spacing for multi-line text. */
+.team-info { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+
+/* ── RESPONSIVE OVERRIDES ───────────────────────────────────────────────── */
+
+/* On screens narrower than 700 px (typical tablets/phones in portrait):
+   - Stack the mission text and logo card vertically instead of side by side.
+   - Switch the logo card's inner layout to a horizontal row so the icon and
+     text sit beside each other rather than stacking, saving vertical space. */
+@media (max-width: 700px) {
+  .about-mission { grid-template-columns: 1fr; }   /* single column layout */
+  .mission-logo { flex-direction: row; }           /* icon + text side by side */
+}

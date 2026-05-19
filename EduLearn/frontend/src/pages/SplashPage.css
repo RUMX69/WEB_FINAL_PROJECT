@@ -1,0 +1,123 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SplashPage.css
+   Styles for the initial Splash / Loading screen shown while the app
+   initialises (checks auth, loads data, etc.).
+   The screen displays a centred logo with three animated loading dots below it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── SPLASH CONTAINER ────────────────────────────────────────────────────── */
+
+/* Full-viewport white container that centres everything on screen.
+   column flex with align-items:center + justify-content:center places
+   the logo and dots in the exact middle of the viewport.
+   gap:40px adds vertical space between the logo block and the dots.
+   animation:fadeIn 0.6s ease fades the whole screen in gently on mount
+   so the transition from blank page to splash feels smooth. */
+.splash {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background: white;
+  animation: fadeIn 0.6s ease;
+}
+
+/* Fade the entire splash page from opacity 0 to 1 over 0.6 seconds. */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* ── LOGO BLOCK ──────────────────────────────────────────────────────────── */
+
+/* Row containing the icon square and the app name/tagline text.
+   gap:20px separates the icon from the text.
+   animation:slideUp runs after a 0.2 s delay (both keyword ensures the element
+   starts in its "from" state before the delay begins, preventing a flash). */
+.splash-logo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  animation: slideUp 0.7s ease 0.2s both;
+}
+
+/* Slides the element up from 20 px below while fading it in.
+   Used on both the logo block and the dots to create a staggered
+   "rise in" entrance effect. */
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* The square icon box on the left side of the logo.
+   The navy→mid-blue diagonal gradient matches the brand identity.
+   border-radius:22px creates prominent "squircle" rounded corners.
+   box-shadow adds a soft glow that lifts the icon off the white background. */
+.splash-icon {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #1e3554, #4a7fb5);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 40px rgba(44,74,110,0.3);   /* coloured shadow for depth */
+}
+
+/* Large bold app name beside the icon (e.g. "WatchWise").
+   line-height:1 prevents extra whitespace above/below the text,
+   making it align precisely with the centre of the icon. */
+.splash-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+
+/* Small all-caps subtitle below the app name (e.g. "EDUCATIONAL VIDEO PLATFORM").
+   letter-spacing:0.12em spreads the characters for an "inscription" look.
+   var(--text-muted) keeps it subtle so the main title stays dominant. */
+.splash-sub {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+
+/* ── LOADING DOTS ────────────────────────────────────────────────────────── */
+
+/* Row of three pulsing dots shown below the logo as a loading indicator.
+   animation:slideUp with a longer 0.5 s delay staggers this block's entrance
+   so it appears after the logo, reinforcing a natural top-down visual flow. */
+.splash-dots {
+  display: flex;
+  gap: 8px;
+  animation: slideUp 0.7s ease 0.5s both;
+}
+
+/* Each individual dot.
+   width/height + border-radius:50% make a perfect 8 px circle.
+   The pulse animation changes opacity and scale to simulate breathing.
+   animation-delay on :nth-child(2) and (3) staggers the pulses so they
+   ripple one after another rather than all pulsing in sync. */
+.splash-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--navy);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+/* Second dot starts its pulse cycle 0.2 s later. */
+.splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+/* Third dot starts 0.4 s after the first, completing the stagger. */
+.splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* The pulse keyframe:
+   - At 0 % and 100 % (start and end): dot is small (0.8×) and almost invisible (0.3 opacity).
+   - At 50 % (midpoint): dot is full size (1×) and fully visible (opacity 1).
+   This creates a smooth "breathe in → breathe out" pulsing rhythm. */
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}

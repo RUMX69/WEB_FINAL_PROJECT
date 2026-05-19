@@ -1,0 +1,170 @@
+/* ─── Navbar.css ─────────────────────────────────────────────────────────────
+   Styles for the top navigation bar (Navbar.jsx).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+
+/* ── Navbar Container ────────────────────────────────────────────────────── */
+
+.navbar {
+  position: fixed;       /* Stick the navbar to the top of the viewport — it stays
+                            visible even when the user scrolls down the page. */
+  top: 0;
+  left: 0;
+  right: 0;              /* Stretch from left edge to right edge (full width). */
+  height: var(--navbar-height); /* 60px tall — matches the padding-top on .main-content. */
+  background: var(--bg-card);   /* White (light) or dark-card (dark mode). */
+  border-bottom: 1px solid var(--border); /* Subtle separator line below the navbar. */
+  display: flex;         /* Lay out children (left / search / right) in a row. */
+  align-items: center;   /* Vertically center all children within the 60px height. */
+  gap: 16px;             /* 16px spacing between the three sections. */
+  padding: 0 20px 0 16px; /* Right padding slightly larger to balance visual weight. */
+  z-index: 200;          /* Sits above the sidebar (z-index:100) and all page content. */
+}
+
+
+/* ── Left Section (hamburger + logo) ─────────────────────────────────────── */
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;             /* Space between the hamburger button and the logo. */
+  min-width: 220px;      /* Reserve enough width for the logo text and button so
+                            they don't reflow when content changes. */
+}
+
+
+/* ── Hamburger Menu Button ───────────────────────────────────────────────── */
+
+.hamburger {
+  background: none;      /* Transparent — no background colour by default. */
+  border: none;          /* Remove browser default button border. */
+  display: flex;
+  flex-direction: column; /* Stack the three <span> bars vertically. */
+  gap: 5px;              /* 5px between each bar. */
+  padding: 6px;          /* Clickable area padding around the bars. */
+  border-radius: 6px;
+  cursor: pointer;
+}
+.hamburger:hover {
+  background: var(--bg); /* Subtle grey background on hover to show it's clickable. */
+}
+
+/* Each of the three horizontal lines of the hamburger icon */
+.hamburger span {
+  display: block;        /* <span> is inline by default — make it block for sizing. */
+  width: 20px;
+  height: 2px;           /* Thin horizontal bar. */
+  background: var(--text-secondary); /* Medium grey colour. */
+  border-radius: 2px;    /* Slightly rounded ends. */
+}
+
+
+/* ── Logo Link ───────────────────────────────────────────────────────────── */
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;              /* Space between the icon square and the "EduLearn" text. */
+  text-decoration: none; /* Remove default link underline. */
+}
+
+/* Navy square container for the SVG icon */
+.logo-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--navy);      /* Navy blue background. */
+  border-radius: 8px;           /* Rounded corners on the icon square. */
+  display: flex;
+  align-items: center;
+  justify-content: center;      /* Center the SVG icon inside the square. */
+  flex-shrink: 0;               /* Prevent the icon from shrinking on narrow viewports. */
+}
+
+/* "EduLearn" brand name text */
+.logo-text {
+  font-family: 'Sora', sans-serif; /* Brand font — different from body Inter. */
+  font-size: 16px;
+  font-weight: 700;               /* Bold. */
+  color: var(--navy);
+}
+
+
+/* ── Search Bar ──────────────────────────────────────────────────────────── */
+
+.navbar-search {
+  flex: 1;               /* Grows to fill remaining space between left and right sections. */
+  max-width: 480px;      /* Cap width so the search bar doesn't become too wide. */
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 24px;   /* Pill shape — fully rounded ends. */
+  overflow: hidden;      /* Clips the input's square corners to the pill shape. */
+  background: var(--bg); /* Slightly grey background to distinguish from the white navbar. */
+}
+
+.search-input {
+  flex: 1;               /* Takes up all space inside the pill, leaving room for the button. */
+  border: none;          /* No border — the outer .navbar-search provides the border. */
+  background: transparent;
+  padding: 9px 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;         /* Remove the browser focus ring (the pill border serves this purpose). */
+}
+.search-input::placeholder {
+  color: var(--text-muted); /* Light grey placeholder text. */
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  padding: 8px 14px;
+  color: var(--text-muted); /* Muted icon colour at rest. */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.search-btn:hover {
+  color: var(--navy); /* Icon turns navy when hovered. */
+}
+
+
+/* ── Right Section ───────────────────────────────────────────────────────── */
+
+.navbar-right {
+  margin-left: auto;
+  /* Pushes this section to the far right of the navbar by consuming
+     all leftover horizontal space between the search bar and itself. */
+}
+
+
+/* ── Avatar / Profile Button ─────────────────────────────────────────────── */
+
+.avatar-btn {
+  background: none;
+  border: none;          /* Override browser default button border first... */
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;    /* Perfect circle. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border); /* ...then set our custom border. */
+  /* Note: the second border declaration overrides the first (none → 1.5px). */
+  transition: border-color 0.2s; /* Smooth border colour change on hover. */
+}
+.avatar-btn:hover {
+  border-color: var(--navy); /* Border turns navy on hover. */
+  color: var(--navy);        /* Icon (if shown) also turns navy. */
+}
+
+/* Profile picture image inside the avatar button */
+.avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;   /* Crop the image to a circle. */
+  object-fit: cover;    /* Scale the image to fill the circle without distortion.
+                           If the image isn't square, it gets cropped from the edges. */
+}
