@@ -21,10 +21,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install backend dependencies
-        working-directory: ./FinpOI/backend
+        working-directory: ./EduLearn/backend
         run: npm install
 
   # Job 2: Install and build frontend
@@ -38,14 +38,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install frontend dependencies
-        working-directory: ./FinpOI/frontend
+        working-directory: ./EduLearn/frontend
         run: npm install
 
       - name: Build React app
-        working-directory: ./FinpOI/frontend
+        working-directory: ./EduLearn/frontend
         run: ./node_modules/.bin/vite build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build backend Docker image
-        run: docker build -t edulearn-backend ./FinpOI/backend
+        run: docker build -t edulearn-backend ./EduLearn/backend
 
       - name: Build frontend Docker image
-        run: docker build -t edulearn-frontend ./FinpOI/frontend
+        run: docker build -t edulearn-frontend ./EduLearn/frontend
