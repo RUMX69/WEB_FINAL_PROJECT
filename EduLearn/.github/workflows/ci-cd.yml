@@ -1,0 +1,66 @@
+# ── EduLearn GitHub Actions CI/CD Pipeline ───────────
+# Runs automatically on every push to the main branch
+
+name: EduLearn CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  # Job 1: Install and verify backend
+  backend:
+    name: Backend — Install & Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install backend dependencies
+        working-directory: ./FinpOI/backend
+        run: npm install
+
+  # Job 2: Install and build frontend
+  frontend:
+    name: Frontend — Install & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install frontend dependencies
+        working-directory: ./FinpOI/frontend
+        run: npm install
+
+      - name: Build React app
+        working-directory: ./FinpOI/frontend
+        run: ./node_modules/.bin/vite build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+  # Job 3: Build Docker images (runs after both jobs above pass)
+  docker:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend Docker image
+        run: docker build -t edulearn-backend ./FinpOI/backend
+
+      - name: Build frontend Docker image
+        run: docker build -t edulearn-frontend ./FinpOI/frontend
