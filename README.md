@@ -52,7 +52,7 @@ A full-stack educational video platform built with the MERN stack (MongoDB, Expr
 ---
 
 ## Project Structure
-![alt text](<WhatsApp Image 2026-05-24 at 10.12.55 PM-1.jpeg>)
+![alt text](/projectstructure.png)
 ---
 
 ## Getting Started
