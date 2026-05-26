@@ -1,6 +1,6 @@
 // ─── controllers/user.controller.js ──────────────────────────────────────────
 // Handles updates to the authenticated user's own account:
-//   - profile (name + avatar)
+//   - profile (name + avatar + bio)
 //   - password (with verification of the current password)
 //   - UI settings (theme + appearance)
 // All routes here are protected – the user must be logged in.
@@ -14,20 +14,21 @@ const bcrypt = require("bcryptjs");
 
 /**
  * PUT /api/users/profile
- * Updates the user's display name and/or avatar URL.
+ * Updates the user's display name, avatar URL, and/or bio.
  */
 exports.updateProfile = async (req, res) => {
   try {
-    // Extract the fields the user wants to change from the request body
-    const { name, avatar } = req.body;
+    // Extract the fields the user wants to change from the request body.
+    // `bio` is now included alongside name and avatar.
+    const { name, avatar, bio } = req.body;
 
     // Find the user by their _id and update in a single atomic operation.
-    // `new: true`          → return the document AFTER the update (not before)
+    // `new: true`           → return the document AFTER the update (not before)
     // `runValidators: true` → enforce schema rules (e.g. required, trim) on the new values
     // `.select("-password")` → exclude the hashed password from the returned document
     const user = await User.findByIdAndUpdate(
       req.user._id,                          // the logged-in user's MongoDB _id
-      { name, avatar },                      // fields to update
+      { name, avatar, bio },                 // fields to update — bio now included
       { new: true, runValidators: true }
     ).select("-password");
 

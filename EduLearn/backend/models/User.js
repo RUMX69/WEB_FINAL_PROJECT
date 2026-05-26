@@ -44,6 +44,15 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    // Optional short biography or description the user can write about themselves.
+    // Defaults to an empty string (no bio set).
+    // No maximum enforced at the schema level — the frontend textarea is the limit.
+    bio: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
     // The user's role within the platform.
     // `enum` restricts the value to either "user" (regular) or "admin".
     // New accounts default to "user".

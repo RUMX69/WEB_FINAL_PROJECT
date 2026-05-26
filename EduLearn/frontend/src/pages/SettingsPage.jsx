@@ -185,9 +185,14 @@ function AccountPanel() {
   // from the global authentication context.
   const { user, logout, updateUser } = useAuth();
 
-  // Form state: name (editable) and bio (editable).
-  // Pre-filled with the user's current name from context.
-  const [form, setForm] = useState({ name: user?.name || "", bio: "" });
+  // Form state: name and bio, both pre-filled from the current user profile.
+  // Previously bio was always initialised to "" which meant it never loaded
+  // the saved value and was always sent as empty on save — wiping any bio
+  // the user had previously set.
+  const [form, setForm] = useState({
+    name: user?.name || "",
+    bio: user?.bio || "",   // ← pre-fill from saved profile so it doesn't reset on load
+  });
 
   // Current avatar URL (starts as whatever is stored in the user profile).
   const [avatar, setAvatar] = useState(user?.avatar || "");
@@ -210,8 +215,14 @@ function AccountPanel() {
     setError("");        // Clear previous errors
 
     try {
-      // Send updated name and avatar to the backend.
-      const res = await api.put("/users/profile", { name: form.name, avatar });
+      // Send updated name, avatar, and bio to the backend.
+      // Previously bio was missing from this request, so it was never saved.
+      const res = await api.put("/users/profile", {
+        name: form.name,
+        avatar,
+        bio: form.bio,   // ← now included so the backend actually saves it
+      });
+
       // Update the global user object in AuthContext so the nav
       // bar and other components reflect the change immediately.
       updateUser(res.data.user);
@@ -278,7 +289,7 @@ function AccountPanel() {
           />
         </div>
 
-        {/* Bio field: multi-line textarea */}
+        {/* Bio field: multi-line textarea, pre-filled from saved profile */}
         <div className="form-group">
           <label className="form-label">Bio</label>
           <textarea className="form-input" value={form.bio} onChange={set("bio")} rows={3} />
