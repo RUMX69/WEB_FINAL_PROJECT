@@ -65,8 +65,18 @@ jobs:
       - name: Build frontend Docker image
         run: docker build -t edulearn-frontend ./EduLearn/frontend
 
-  # Job 4: Trigger Vercel frontend deployment
-  # Uses a deploy hook URL so Vercel rebuilds from the latest code on every push.
+  # Job 4: Deploy backend to Render
+  # Triggers Render's deploy hook so the backend redeploys on every push.
+  deploy-backend:
+    name: Deploy Backend to Render
+    runs-on: ubuntu-latest
+    needs: [docker]
+    steps:
+      - name: Trigger Render deploy hook
+        run: curl -X POST "https://api.render.com/deploy/srv-d85v4jrtqb8s73c0aqr0?key=Ku1BF7PY6BQ"
+
+  # Job 5: Deploy frontend to Vercel
+  # Triggers Vercel's deploy hook so the frontend redeploys on every push.
   # ?buildCache=0 forces a clean build, preventing Vercel from serving stale cached code.
   deploy-frontend:
     name: Deploy Frontend to Vercel
