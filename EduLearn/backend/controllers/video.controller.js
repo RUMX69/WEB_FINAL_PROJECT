@@ -6,6 +6,15 @@
 // Import the Video Mongoose model to query the videos collection
 const Video = require("../models/Video");
 
+// Import History and Saved models so we can clean up their documents
+// whenever a video is permanently deleted by an admin.
+// Without this, deleted videos leave behind "orphaned" references in these
+// collections — documents that point to a Video that no longer exists.
+// When Mongoose tries to .populate() those references it returns null,
+// which causes the frontend to crash when it reads null.title / null._id etc.
+const History = require("../models/History");
+const Saved   = require("../models/Saved");
+
 /**
  * GET /api/videos
  * Returns all videos, with optional search (title or tags) and category filtering.
@@ -125,13 +134,32 @@ exports.updateVideo = async (req, res) => {
 
 /**
  * DELETE /api/videos/:id
- * Permanently removes a video from the database.
+ * Permanently removes a video and all related user data from the database.
  * ADMIN ONLY – protected by `protect` + `adminOnly` middleware in the router.
+ *
+ * Why we clean up History and Saved:
+ *   Both collections store a `video` field that references the Video's ObjectId.
+ *   If we only delete the Video document and leave those references behind,
+ *   Mongoose's .populate("video") will silently return null for each orphaned
+ *   entry. The frontend then tries to read null.title, null._id, etc. and
+ *   crashes — causing the history/saved pages to go completely blank.
+ *   Deleting related documents here keeps the database consistent.
  */
 exports.deleteVideo = async (req, res) => {
   try {
-    // Find and delete the video in one atomic operation
-    await Video.findByIdAndDelete(req.params.id);
+    const videoId = req.params.id; // the video's MongoDB _id from the URL
+
+    // 1. Delete the Video document itself
+    await Video.findByIdAndDelete(videoId);
+
+    // 2. Remove every History entry that references this video.
+    //    This covers ALL users who watched it — we don't want any user's
+    //    history page to crash because they watched a now-deleted video.
+    await History.deleteMany({ video: videoId });
+
+    // 3. Remove every Saved entry that references this video.
+    //    Same reason — prevents null-populate crashes on the saved page.
+    await Saved.deleteMany({ video: videoId });
 
     res.json({ success: true, message: "Video deleted" });
   } catch (err) {

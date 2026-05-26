@@ -47,8 +47,17 @@ export default function HistoryPage() {
   // and stores them in state. The spinner is hidden once done.
   useEffect(() => {
     api.get("/history")
-      .then((res) => setHistory(res.data.history)) // Store the history array on success
-      .finally(() => setLoading(false));           // Always stop the loading indicator
+      .then((res) => {
+        // Filter out any entries where video is null.
+        // This can happen when an admin deletes a video that users had
+        // previously watched — the History document stays in the DB but
+        // Mongoose's .populate() returns null for the missing Video reference.
+        // Rendering those null entries would crash the page (null._id throws),
+        // so we strip them out here before storing them in state.
+        const safe = res.data.history.filter((h) => h.video != null);
+        setHistory(safe);
+      })
+      .finally(() => setLoading(false)); // Always stop the loading indicator
   }, []);
 
   // ── HANDLER: Remove a single history entry ────────────────
@@ -56,8 +65,9 @@ export default function HistoryPage() {
   // that entry from the local state to update the UI instantly.
   const remove = async (videoId) => {
     await api.delete(`/history/${videoId}`);
-    // Filter out the deleted entry; compare by the nested video._id
-    setHistory((p) => p.filter((h) => h.video._id !== videoId));
+    // Use optional chaining (h.video?._id) when comparing, as a safety net
+    // in case a null-video entry somehow makes it into state in the future.
+    setHistory((p) => p.filter((h) => h.video?._id !== videoId));
     setMenuOpen(null); // Close the dropdown menu after the action
   };
 
