@@ -3,6 +3,8 @@
 
 A full-stack educational video platform built with the MERN stack (MongoDB, Express, React, Node.js). Users can browse and watch curated video lessons, take timestamped notes, save videos for later, track their watch history, and ask questions in per-video Q&A threads. Admins manage the video library from a dedicated dashboard.
 
+hello
+
 ---
 
 ## Table of Contents
